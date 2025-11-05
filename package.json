@@ -1,0 +1,48 @@
+{
+  "name": "mailapidev",
+  "version": "1.0.0",
+  "description": "The official Node.js SDK for MailApi.dev - Send transational emails, Verify, Update and handle your Project Email needs.",
+  "main": "src/index.js",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "types": "src/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YOUR_USERNAME/mailapidev.git"
+  },
+  "keywords": [
+    "mailapi",
+    "email",
+    "transactional",
+    "automation",
+    "verify",
+    "contacts",
+    "transactional-email",
+    "email-verification",
+    "email-api",
+    "smtp",
+    "ses",
+    "sendgrid",
+    "mailgun",
+    "mailjet",
+    "mandrill",
+    "resend"
+  ],
+  "author": "ZinoTrust <contact@mailapi.dev>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zinotrust/mailapidev/issues"
+  },
+  "homepage": "https://github.com/zinotrust/mailapidev#readme",
+  "dependencies": {
+    "axios": "^1.13.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
