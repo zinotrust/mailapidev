@@ -112,7 +112,7 @@ async function updateEmailList() {
 
 ---
 
-### 3. Verify an Email
+### 4. Verify an Email
 
 Check if an email address is valid and deliverable.
 
@@ -146,7 +146,7 @@ async function verifyEmail() {
 
 | Parameter | Type | Required | Description |
 | :--- | :--- | :--- | :--- |
-| `from` | string | **Yes** | The "From" email address. E.g., "Your App <hello@mailapi.dev>" |
+| `from` | string | **Yes** | The "From" email address. E.g., "Your App <noreply@mail.mailapi.dev>" |
 | `to` | string | **Yes** | The recipient's email address. |
 | `subject` | string | **Yes** | The subject of the email. |
 | `message` | string | Conditional | The HTML or text content. Required if `template_id` is not used. |
