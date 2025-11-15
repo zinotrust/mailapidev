@@ -78,41 +78,7 @@ async function sendTemplateEmail() {
 
 ---
 
-### 3. Update an email in your project EmailList
-
-Update an existing email in your project. This is perfect for syncing subscription status or user activity.
-
-```javascript
-async function updateEmailList() {
-  // Use mailapi.emails.update()
-  const { data, error } = await mailapi.emails.update({
-    email: "user@example.com",
-    subscriptionStatus: "active",
-    plan: {
-      name: "Pro",
-      amount: 29.99,
-      interval: "month"
-    },
-    lastSeenAt: new Date().toISOString(),
-    tags: ["pro-user", "active-subscriber"],
-    customFields: {
-      company: "Acme Inc.",
-      user_id: "u12345"
-    }
-  });
-
-  if (error) {
-    console.error("Failed to update contact:", error.message);
-    return;
-  }
-
-  console.log("Contact updated:", data.data);
-}
-```
-
----
-
-### 4. Verify an Email
+### 3. Verify an Email
 
 Check if an email address is valid and deliverable.
 
@@ -140,6 +106,94 @@ async function verifyEmail() {
 
 ---
 
+### 4. Add a new email in your project EmailList
+
+Verify and add a new contact to your project's contact list. This will verify the email and, if valid, save it.
+
+```javascript
+async function addEmail() {
+  const { data, error } = await mailapi.emails.add({
+    email: "new_user@example.com",
+    subscriptionStatus: "trialing",
+    plan: {
+      id: "price_123",
+      name: "Pro",
+      amount: 29.99,
+      interval: "month"
+    },
+    tags: ["new-signup"],
+    customFields: {
+      source: "website_form"
+    }
+  });
+
+  if (error) {
+    console.error("Failed to add contact:", error.message);
+    return;
+  }
+
+  console.log("Contact added successfully:", data.data);
+}
+```
+
+---
+
+### 5. Update an email in your project EmailList
+
+Update an existing email in your project. This is perfect for syncing subscription status or user activity.
+
+```javascript
+async function updateEmailList() {
+  // Use mailapi.emails.update()
+  const { data, error } = await mailapi.emails.update({
+    email: "user@example.com",
+    subscriptionStatus: "active",
+    plan: {
+      id: "price_123",
+      name: "Pro",
+      amount: 29.99,
+      interval: "month"
+    },
+    lastSeenAt: new Date().toISOString(),
+    tags: ["pro-user",],
+    customFields: {
+      company: "Acme Inc.",
+      user_id: "u12345"
+    }
+  });
+
+  if (error) {
+    console.error("Failed to update contact:", error.message);
+    return;
+  }
+
+  console.log("Contact updated:", data.data);
+}
+```
+
+---
+
+### 6. Delete an email in your project EmailList
+
+Delete an existing email in your project email list.
+
+```javascript
+async function deleteEmail() {
+  const { data, error } = await mailapi.emails.delete({
+    email: "new_user@example.com"
+  });
+
+  if (error) {
+    console.error("Failed to delete contact:", error.message);
+    return;
+  }
+
+  console.log("Contact deleted:", data.message);
+}
+```
+
+---
+
 ## API Reference
 
 ### `mailapi.emails.send(payload)`
@@ -157,7 +211,13 @@ async function verifyEmail() {
 | `verify` | boolean | No | Set to `true` to verify the email before sending. Does not save to contacts. |
 | `verify_and_save` | boolean | No | Set to `true` to verify the email and save it to your contact list if valid. |
 
-### `mailapi.emails.update(payload)`
+### `mailapi.emails.verify(payload)`
+
+| Parameter | Type | Required | Description |
+| :--- | :--- | :--- | :--- |
+| `email` | string | **Yes** | The email address you want to verify. |
+
+### `mailapi.emails.add(payload)` & `mailapi.emails.update(payload)`
 
 | Parameter | Type | Required | Description |
 | :--- | :--- | :--- | :--- |
@@ -173,8 +233,8 @@ async function verifyEmail() {
 | `churnedAt` | string \| Date | No | ISO 8601 string for when the contact churned. |
 | `churnReason` | string | No | A string explaining why the contact churned. |
 
-### `mailapi.emails.verify(payload)`
+### `mailapi.emails.delete(payload)`
 
 | Parameter | Type | Required | Description |
 | :--- | :--- | :--- | :--- |
-| `email` | string | **Yes** | The email address you want to verify. |
+| `email` | string | **Yes** | The email address you want to delete. |

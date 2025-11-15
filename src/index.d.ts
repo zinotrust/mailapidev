@@ -21,7 +21,7 @@ export interface SendEmailPayload {
   subject: string;
   /** The HTML or text content of the email. Required if 'template_id' is not used. */
   message?: string;
-  /** The ID of a pre-built template. Required if 'message' is not used. */
+  /** The ID of a pre-built template. Required if 'template_id' is not used. */
   template_id?: string;
   /** A key-value object of data to merge into your template. */
   template_data?: Record<string, any>;
@@ -40,6 +40,44 @@ export interface VerifyEmailPayload {
   email: string;
 }
 
+/**
+ * Payload for adding a new contact.
+ * Email is required. All other fields are optional.
+ */
+export interface AddContactPayload {
+  /** The email address of the contact you want to add. */
+  email: string;
+  /** An object containing the contact's plan details. */
+  plan?: {
+    id?: string;
+    name?: string;
+    amount?: number;
+    interval?: 'month' | 'year' | 'one_time' | 'free';
+  };
+  /** The contact's subscription status. */
+  subscriptionStatus?: 'trialing' | 'active' | 'past_due' | 'canceled' | 'churned' | 'free';
+  /** An ISO 8601 string or Date object. Setting this also sets 'sessionCount' to 1. */
+  lastSeenAt?: string | Date;
+  /** An array of strings. */
+  tags?: string[];
+  /** A key-value object of custom data. */
+  customFields?: Record<string, any>;
+  /** An ISO 8601 string or Date object for when a trial started. */
+  trialStartedAt?: string | Date;
+  /** An ISO 8601 string or Date object for when a trial ended. */
+  trialEndedAt?: string | Date;
+  /** An ISO 8601 string or Date object for when the contact converted to paid. */
+  convertedAt?: string | Date;
+  /** An ISO 8601 string or Date object for when the contact churned. */
+  churnedAt?: string | Date;
+  /** A string explaining why the contact churned. */
+  churnReason?: string;
+}
+
+/**
+ * Payload for updating an existing contact.
+ * Email is required. All other fields are optional.
+ */
 export interface UpdateContactPayload {
   /** The email address of the contact you want to update. */
   email: string;
@@ -69,6 +107,12 @@ export interface UpdateContactPayload {
   /** A string explaining why the contact churned. */
   churnReason?: string;
 }
+
+export interface DeleteContactPayload {
+  /** The email address of the contact you want to delete. */
+  email: string;
+}
+
 
 // --- Success Response Interfaces (What the API returns) ---
 
@@ -130,11 +174,23 @@ export interface ContactData {
   updatedAt: string;
 }
 
+export interface AddContactSuccessResponse {
+  success: true;
+  message: string;
+  data: ContactData;
+}
+
 export interface UpdateContactSuccessResponse {
   success: true;
   message: string;
-  action: 'updated' | 'created'; // Your controller only shows 'updated'
+  action: 'updated';
   data: ContactData;
+}
+
+export interface DeleteContactSuccessResponse {
+  success: true;
+  message: string;
+  email: string;
 }
 
 // --- API Wrapper Type ---
@@ -164,10 +220,22 @@ export class Emails {
   verify(payload: VerifyEmailPayload): MailApiResponse<VerifyEmailSuccessResponse>;
 
   /**
+   * Verify and add a new contact to your project.
+   * @param {AddContactPayload} payload - Contact add payload.
+   */
+  add(payload: AddContactPayload): MailApiResponse<AddContactSuccessResponse>;
+
+  /**
    * Update an existing contact's properties.
    * @param {UpdateContactPayload} payload - Contact update payload.
    */
   update(payload: UpdateContactPayload): MailApiResponse<UpdateContactSuccessResponse>;
+
+  /**
+   * Delete a contact from your project.
+   * @param {DeleteContactPayload} payload - Contact delete payload.
+   */
+  delete(payload: DeleteContactPayload): MailApiResponse<DeleteContactSuccessResponse>;
 }
 
 export class MailApiDev {
@@ -178,7 +246,7 @@ export class MailApiDev {
   constructor(apiKey: string);
   
   /**
-   * Access email sending, verification, and contact update methods.
+   * Access email sending, verification, and contact management methods.
    */
   emails: Emails;
 }
